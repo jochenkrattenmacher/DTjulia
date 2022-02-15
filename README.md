@@ -17,12 +17,40 @@ The three modules are served by a genie webserver and are designed for local use
 ### Presentation module
 This module will be used to display introduction presentations. The presentations have to be created in html in the backend, but a template presentation will be provided.
 
+#### TODO
+- create template
+    - add banner for eventname, logos ...
+    - show basic functionality
+        - text
+        - images
+        - animated gifs
+        - highlighting
+
+
 ### Scenario module
 This module provides an interactive frontend to select predefined measures. The measures and their consequences have to comply to a yet to be defined schema.
+
+#### TODO
+- define data schema
+- dynamic web interface
+    - measures as input
+    - display measures and descriptions
+    - make measures selectable
+    - restrict options
+    - store and process selection
+
 
 ### Data visualisation module
 This module will display the results and the consequences of the scenario(s). This includes different plots and possibly maps(?).
  
+#### TODO
+- basic plots
+    - selected measures as input
+    - link measures and consequences
+    - make results compareable
+- store results
+
+
 ## Tools
 
 ### reveal.js
