@@ -4,10 +4,14 @@ route("/") do
   serve_static_file("welcome.html")
 end
 
-route("/hello") do
-  "Welcome to Genie!"
+route("/scenario") do
+  "Still under construction..."
 end
 
-route("/reveal") do
+route("/results") do
+  "Still under construction..."
+end
+
+route("/presentation") do
   serve_static_file("demo.html")
 end
