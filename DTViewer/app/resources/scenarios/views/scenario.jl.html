@@ -1,0 +1,20 @@
+<h1>Hier die ersten $(length(measures)) Maßnahmen</h1>
+<% for_each(measures) do measure %>
+  <div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-7">
+                <h5 class="card-title">$(measure.title)</h5>
+                <p class="card-text">$(measure.shortDescription)</p>
+            </div>
+            <div class="col-sm-2">
+                <div class="btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary active">
+                    <input type="checkbox" autocomplete="off"> Checked
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+<% end %>
