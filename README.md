@@ -31,7 +31,7 @@ This module will be used to display introduction presentations. The presentation
 This module provides an interactive frontend to select predefined measures. The measures and their consequences have to comply to a yet to be defined schema.
 
 #### TODO
-- define data schema
+- define data schema -> json objects?
 - dynamic web interface
     - measures as input
     - display measures and descriptions
@@ -47,6 +47,8 @@ This module will display the results and the consequences of the scenario(s). Th
 - basic plots
     - selected measures as input
     - link measures and consequences
+        - motmo name convention: CH0SP0SE1WE0BP1RE0CO0DI0WO1CS0
+            - acronyms + bool
     - make results compareable
 - store results
 
