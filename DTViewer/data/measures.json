@@ -1,0 +1,70 @@
+[
+    {
+        "category": "goals",
+        "maxChoices": 1,
+        "items":[
+            {
+                "title": "save the world",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            },
+            {
+                "title": "make profit",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            }
+        ]
+    },
+    {
+        "category": "policy",
+        "maxChoices": 2,
+        "items":[
+            {
+                "title": "Measure 1",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            },
+            {
+                "title": "Measure 2",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            },
+            {
+                "title": "Measure 3",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            }
+        ]
+    },
+    {
+        "category": "investment",
+        "maxChoices": 2,
+        "items":[
+            {
+                "title": "Invest 1",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            },
+            {
+                "title": "Invest 2",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            },
+            {
+                "title": "Invest 3",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            }
+        ]
+    },
+    {
+        "category": "event",
+        "maxChoices": 2,
+        "items":[
+            {
+                "title": "Event 1",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            },
+            {
+                "title": "Event 2",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            },
+            {
+                "title": "Event 3",
+                "shortDescription": "Lorem ipsum dolor sit amet"
+            }
+        ]
+    }
+]

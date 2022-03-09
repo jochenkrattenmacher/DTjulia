@@ -1,5 +1,10 @@
 # simpleSim
 
+# current problems
+display active tab with measures
+- the html already contains the correct content
+- set first tab active -> change active tab
+
 Webapplication for the presentation and interaction with models in Decision Theatres
 ## Usage
 
@@ -31,7 +36,6 @@ This module will be used to display introduction presentations. The presentation
 This module provides an interactive frontend to select predefined measures. The measures and their consequences have to comply to a yet to be defined schema.
 
 #### TODO
-- define data schema -> json objects?
 - dynamic web interface
     - measures as input
     - display measures and descriptions

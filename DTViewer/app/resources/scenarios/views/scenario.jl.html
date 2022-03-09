@@ -1,20 +1,36 @@
 <h1>Hier die ersten $(length(measures)) Maßnahmen</h1>
-<% for_each(measures) do measure %>
-  <div class="card">
-    <div class="card-body">
-        <div class="row">
-            <div class="col-sm-7">
-                <h5 class="card-title">$(measure.title)</h5>
-                <p class="card-text">$(measure.shortDescription)</p>
-            </div>
-            <div class="col-sm-2">
-                <div class="btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
-                    <input type="checkbox" autocomplete="off"> Checked
-                    </label>
-                </div>
-            </div>
+<ul class="nav nav-pills nav-justified" role="tablist">
+    <% for_each(categories) do category %>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-mdb-toggle="pill" href="#$(category.name)" role="tab">$(category.name)</a>
+        </li>
+    <% end %> 
+</ul>
+<div class="tab-content">
+    <% for_each(categories) do category %>
+        <div id="$(category.name)" class="tab-pane" role="tabpanel">
+            <h3>$(category.name)</h3>
+            <% for_each(measures) do measure %>
+                <% if measure.type.name == category.name %>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-7">
+                                    <h5 class="card-title">$(measure.title)</h5>
+                                    <p class="card-text">$(measure.shortDescription)</p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="btn-group-toggle" data-toggle="buttons">
+                                        <label class="btn btn-secondary active">
+                                        <input type="checkbox" autocomplete="off"> Checked
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% end %> 
+            <% end %>
         </div>
-    </div>
-  </div>
-<% end %>
+    <% end %> 
+</div>

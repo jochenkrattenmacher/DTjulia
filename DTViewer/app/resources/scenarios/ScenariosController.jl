@@ -1,27 +1,41 @@
 module ScenariosController
 using Genie.Renderer.Html
-@enum MeasureClass begin
-  policy
-  investment
-  event
+using JSON
+
+struct Category
+  name::String
+  maxChoices::Int
 end
 
 struct Measure
   id::Int
   title::String
   shortDescription::String
-  type::MeasureClass
+  type::Category
 end
 
-const lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ac orci phasellus egestas tellus rutrum tellus pellentesque."
-
-const options = Measure[
-  Measure(1, "Gute Sache", lorem, policy),
-  Measure(2, "Bessere Sache", lorem, investment),
-  Measure(3, "Noch was Drittes", lorem, event),
-]
+function parseMeasureJSON(pPath::String)
+  measures = []
+  categories = []
+  measureID = 1
+  open(pPath, "r") do file
+    inputJSON = JSON.parse(file)
+    for entry in inputJSON
+      category = Category(entry["category"], entry["maxChoices"])
+      push!(categories, category)
+      for option in entry["items"]
+        optionTitle = option["title"]
+        optionDescription = option["shortDescription"]
+        push!(measures, Measure(measureID, optionTitle, optionDescription, category))
+        measureID += 1
+      end
+    end
+  end
+  return measures, categories
+end
 
 function scenario_view()
-  html(:scenarios, :scenario, measures = options, layout = :app)
+  options, maxChoices = parseMeasureJSON(pwd() * "/data/measures.json") # TODO: Path in settigs var
+  html(:scenarios, :scenario, measures = options, categories = maxChoices, layout = :app)
 end
 end
