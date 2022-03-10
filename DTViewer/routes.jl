@@ -7,3 +7,7 @@ end
 route("/scenario") do 
   ScenariosController.scenario_view()
 end
+
+route("stipple") do
+  ScenariosController.stipple_view()
+end
