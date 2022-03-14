@@ -1,68 +1,17 @@
 module ScenariosController
+# include("../../helpers/JsonHelper.jl")
+# using JsonHelper
 using Genie.Renderer.Html
-using JSON
-
 using Stipple
 using StippleUI
+using JSON
+using OffsetArrays #TODO: use for better js complience
 
-@reactive mutable struct Scenario <: ReactiveModel
-  choices::R{BitVector} = falses(1)
-  activeCategory::R{Int} = 1
-end
-
-# This macro is necessary for now, as the stipple macro R_str can't handle variables in the call
-macro R_str_esc(s) 
-  :(Symbol($(esc(s))))
-end
-
-function initModel(pChoicesLength)
-  model = init(Scenario)
-  model.choices[] = falses(length(pChoicesLength)-1) # js starts at 0, julia at 1 ...
-
-  on(model.activeCategory) do 
-    @show model.activeCategory
-  end
-  
-  return model
-end
-
-function genCards(pMeasures, pCatID)
-  print(typeof(pCatID))
-  cards = map(filter(x -> x.type.id == pCatID, pMeasures)) do entry 
-    card(
-      card_section(
-        row([
-          cell(size = 7, [
-              h4(entry.title),
-              p(entry.shortDescription)
-            ]
-          )
-          cell(size = 2, [
-              checkbox(label = "Select", fieldname = @R_str_esc "choices[$(entry.id)-1]")
-            ]
-          )
-        ])
-      )
-    )
-  end
-  return cards
-end
-
-function scenarioUI(model, pMeasures, pCategories)
-  cards = genCards(pMeasures, model.activeCategory[])
-  print(cards)
-  page(model, class="container", [
-    h2("", @text(:choices))
-    cards
-    btn("Hier passiert was", @click("activeCategory += 1"))
-  ]
-  )
-end
-
-struct Category
+mutable struct Category
   id::Int
   name::String
   maxChoices::Int
+  active::Bool
 end
 
 struct Measure
@@ -70,6 +19,45 @@ struct Measure
   title::String
   shortDescription::String
   type::Category
+end
+
+@reactive mutable struct Scenario <: ReactiveModel
+  choices::R{BitVector} = Bool[] # TODO: adapt length from measure count
+  activeCategory::R{Int} = 1
+  measures::R{Vector{Measure}} = Measure[]
+  categories::R{Vector{Category}} = Category[]
+end
+
+function initModelfromJson(pDataPath::String, pModel::ReactiveModel)
+  measures, categories = parseMeasureJSON(pDataPath)
+  pModel.choices[] = falses(length(measures)) # js starts at 0, julia at 1 ...
+  pModel.measures[] = measures
+  pModel.categories[] = categories
+  
+  return pModel
+end
+
+function initHandlers(pModel::ReactiveModel)
+  on(pModel.activeCategory) do _
+    @show pModel.activeCategory
+  end
+
+  on(pModel.choices) do _
+    catMeasures = filter(x -> x.type.id == pModel.activeCategory[], pModel.measures[])
+    selectCount = 0
+    for entry in catMeasures
+      if pModel.choices[entry.id] == true
+        selectCount += 1
+      end
+    end
+    if pModel.categories[pModel.activeCategory[]].maxChoices <= selectCount
+      pModel.categories[pModel.activeCategory[]].active = false
+    else
+      pModel.categories[pModel.activeCategory[]].active = true
+    end
+  end
+
+  return pModel
 end
 
 function parseMeasureJSON(pPath::String)
@@ -80,7 +68,7 @@ function parseMeasureJSON(pPath::String)
   open(pPath, "r") do file
     inputJSON = JSON.parse(file)
     for entry in inputJSON
-      category = Category(catID, entry["category"], entry["maxChoices"])
+      category = Category(catID, entry["category"], entry["maxChoices"], true)
       push!(categories, category)
       for option in entry["items"]
         optionTitle = option["title"]
@@ -94,14 +82,51 @@ function parseMeasureJSON(pPath::String)
   return measures, categories
 end
 
+function genCards(pScenModel)
+  cards = map(filter(x -> x.type.id == pScenModel.activeCategory[], pScenModel.measures[])) do entry 
+    println(Symbol("pScenModel.choices[entry.id]"))
+    card(
+      card_section(
+        row([
+          cell(size = 7, [
+              h4(entry.title),
+              p(entry.shortDescription)
+            ]
+          )
+          cell(size = 2, [
+              checkbox(label = "Select", fieldname = Symbol("choices[$(entry.id)-1]"), disabled = "categories[$(entry.type.id)-1].active")
+
+            ]
+          )
+        ])
+      )
+    )
+  end
+  return cards
+end
+
+function scenarioUI(pModel)
+  cards = genCards(pModel)
+  print(cards)
+  page(pModel, class="container", [
+    h2("", @text(:choices))
+    cards
+    btn("Hier passiert was", @click("activeCategory += 1"))
+  ]
+  )
+end
+
 function scenario_view()
   options, maxChoices = parseMeasureJSON(pwd() * "/data/measures.json") # TODO: Path in settigs var
   html(:scenarios, :scenario, measures = options, categories = maxChoices, layout = :app)
 end
 
 function stipple_view()
-  measures, categories = parseMeasureJSON(pwd() * "/data/measures.json")
-  model = initModel(length(measures))
-  html(scenarioUI(model, measures, categories), context = @__MODULE__, layout = :app)
+  model = Stipple.init(Scenario)
+  model = initModelfromJson(dataPath, model)
+  model = initHandlers(model)
+  println(model.choices[])
+  html(scenarioUI(model), context = @__MODULE__, layout = :app)
 end
-end
+
+end # end of module
