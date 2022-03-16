@@ -1,58 +1,45 @@
-using Genie, Stipple, StippleUI
+using Stipple, StippleUI
 
 @reactive mutable struct Test <: ReactiveModel
     changed::R{Bool} = false
+    sweetVec::R{Vector} = []
 end
 
-function changeModel(pModel)
+function changeModel!(pModel)
     pModel.changed[] = true
+    pModel.sweetVec[] = ["abc","def"]
+
+    pModel
+end
+
+function initHandlers(pModel)
+    on(pModel.isready) do isready
+        isready || return
+        @async begin
+            sleep(0.1)
+            push!(pModel)
+        end
+    end
+
     return pModel
 end
 
-function initFirst()
-    model = Stipple.init(Test())
-    return changeModel(model)
-end
+c = init(Test, debounce = 0) |> initHandlers |> changeModel!
 
-function initLast()
-    model = changeModel(Test())
-    return Stipple.init(model)
-end
-
-function initWithHandler()
-    init(Test)
-end
-
-
-a = initFirst()
-b = initLast()
-c = initWithHandler()
-
-println(a.changed[])
-println(b.changed[])
 println(c.changed[])
 
-function ui(model)
-    on(model.isready) do _
-        println("reaaaady")
-        Stipple.push!(model)
-        model.changed[] = true
-    end
+function ui(model::Test)
 
     page(model, class = "container", [
         p(
             span("", @text(:changed))
         )
+        p(" {{vec}} ", @recur(:"vec in sweetVec"))
     ]) |> html
 end
 
-route("/a") do 
-    ui(a)
-end
-route("/b") do 
-    ui(b) 
-end 
-route("/c") do 
-    ui(b) 
+route("/") do 
+    println(c.changed[])
+    ui(c) 
 end 
 up(8020, open_browser=true)

@@ -1,13 +1,15 @@
 using Genie.Router
 using ScenariosController
-route("/") do
-  serve_static_file("welcome.html")
+using LandingPageController
+
+route("/") do 
+  LandingPageController.landing_view()
 end
 
-route("/scenario") do 
-  ScenariosController.scenario_view()
+route("/stipple") do
+  Genie.redirect("/scenario/default")
 end
 
-route("stipple") do
-  ScenariosController.stipple_view()
+route("/scenario/:sName") do
+  ScenariosController.stipple_view(params(:sName))
 end
