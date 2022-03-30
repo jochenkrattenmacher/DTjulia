@@ -34,14 +34,14 @@ This module will be used to display introduction presentations. The presentation
 
 ### Scenario module
 This module provides an interactive frontend to select predefined measures. The measures and their consequences have to comply to a yet to be defined schema.
+The module takes the measures and other input classes as a json file and processes it to an array of measures and categories. The categories are parents objects in the json file. The reactive model stores all categories, measures, the selected measures and the active category. 
 
+Note: The multi user functionality with several sessions is only implemented and not yet tested or verified! In theory, the group name is set as the session id and the model for the differnet sessions are stored in an array. This allows the attribution of models to the group scenarios.
 #### TODO
 - dynamic web interface
-    - measures as input
-    - display measures and descriptions
-    - make measures selectable
     - restrict options
     - store and process selection
+    - multi user functionality
 
 
 ### Data visualisation module
