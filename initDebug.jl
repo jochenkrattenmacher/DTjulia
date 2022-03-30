@@ -1,3 +1,4 @@
+# used to isolate model problem: https://github.com/GenieFramework/Stipple.jl/issues/97
 using Stipple, StippleUI
 
 @reactive mutable struct Test <: ReactiveModel

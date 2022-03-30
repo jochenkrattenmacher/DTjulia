@@ -1,3 +1,4 @@
+# code from github issue: https://github.com/GenieFramework/Stipple.jl/issues/97
 using Stipple, StippleUI
 
 @reactive! mutable struct Test <: ReactiveModel
@@ -15,16 +16,16 @@ end
 function handlers(model)
     on(model.isready) do isready
         isready || return
-        @async begin
-            sleep(0.1)
-            push!(model)
-        end
+        changeModel!(model)
+    end
+
+    on(model.changed) do val
+      @show val
+      notify(model, "The model has changed")
     end
 
     model
 end
-
-model = init(Test, debounce = 0) |> handlers |> changeModel!
 
 function ui(model::Test)
     page(model, class = "container", row(cell(class = "st-module", [
@@ -40,8 +41,7 @@ function ui(model::Test)
 end
 
 route("/") do 
-    global model
-    ui(model)
+    ui(init(Test, transport = Genie.WebChannels) |> handlers)
 end
 
-up(8022, open_browser=true)
+up(8020, open_browser = true)
