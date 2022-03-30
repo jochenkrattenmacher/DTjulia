@@ -14,8 +14,8 @@ Webapplication for the presentation and interaction with models in Decision Thea
 The application consists of three main components. 
 
 1. presentation module based on reveal.js
-2. interactive scenario module, based on stipple.jl
-3. data visualisation module, also based on stipple.js
+2. interactive scenario module, based on stipple.jl and stippleUI.jl
+3. data visualisation module, also based on stipple.jsand stippleCharts.jl
 
 The three modules are served by a genie webserver and are designed for local use only.
 
@@ -62,8 +62,20 @@ This module will display the results and the consequences of the scenario(s). Th
 ### reveal.js
 [Reveal.js documentation](https://revealjs.com/)
 
+
 ### genie.jl
 [Genie documentation](https://www.genieframework.com/)
+Genie is a web framework for Julia. It is 
 
 ### stipple.jl
 [Stipple repo](https://github.com/GenieFramework/Stipple.jl)
+Stipple is a reactive webframe work written in Julia. It translates julia commands into js and vue.js. At the core of the framework is a reactive model, that is used for the communication between the front end side and back end side. The model is initialised like a struct and can be used as such in the back end. 
+During the startup of the application, the js version of the model gets pushed to the front end and has to be connected to an instance in the backend. (At the moment, the developers try to abstract this behaviour, I opened up a git issue, which should contain the latest changes: https://github.com/GenieFramework/Stipple.jl/issues/97)
+To display the values of the model in the front end, both stipple macros, like `@text(:choices)`, and inline js-code,like `@click("activeCategory += 1")` can be used. 
+
+The design elements of stipple are interpreted with qasar and vue.js and thus accept vue parameters as well: 
+Also there are macros for vue.js control structures like loops and conditions, that can be appended to elemets as paramter:
+```
+- @iif(:isready)
+- @recur(:"entry in measures")
+```
