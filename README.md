@@ -1,11 +1,12 @@
 # simpleSim
+Webapplication for the presentation and interaction with models in Decision Theatres
 
 # current problems
 display active tab with measures
 - the html already contains the correct content
-- set first tab active -> change active tab
+    - the reactive model does not work yet as intended, on the first load the content is transferred , there is an open git issue and the developers are on it
+    - Next steps: set first tab active -> button change active tab (in-/decrease the tab counter)
 
-Webapplication for the presentation and interaction with models in Decision Theatres
 ## Usage
 The genie webservice can be started with the script for the desired OS under DTViewer/bin/server<.bat>. The service can only ended by exiting the process (crtl + c).
 Test scripts like the initDebug can be just started  with julia and they will run asyncronous in the shell. This means, that they post their output to the terminal but new commands, e.g. down() can be issued.
