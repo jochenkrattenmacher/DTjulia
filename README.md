@@ -7,7 +7,8 @@ display active tab with measures
 
 Webapplication for the presentation and interaction with models in Decision Theatres
 ## Usage
-
+The genie webservice can be started with the script for the desired OS under DTViewer/bin/server<.bat>. The service can only ended by exiting the process (crtl + c).
+Test scripts like the initDebug can be just started  with julia and they will run asyncronous in the shell. This means, that they post their output to the terminal but new commands, e.g. down() can be issued.
 
 ## Components
 
@@ -65,7 +66,9 @@ This module will display the results and the consequences of the scenario(s). Th
 
 ### genie.jl
 [Genie documentation](https://www.genieframework.com/)
-Genie is a web framework for Julia. It is 
+Genie is a web framework for Julia. 
+In routes.jl the valid URIs are specified with the behaviour. The page controllers, that build the web content, are located under app/recources/<resourceName>/. In these folders there also can be views, that contain template html code.
+The input data should be placed under app/data/ and can be exchanged.
 
 ### stipple.jl
 [Stipple repo](https://github.com/GenieFramework/Stipple.jl)
