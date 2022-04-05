@@ -1,1 +1,0 @@
-"C:\Users\Jochen\AppData\Local\Programs\Julia-1.7.2\bin\julia.exe" --color=yes --depwarn=no --project=@. -q -- "%~dp0..\bootstrap.jl" -r %*
