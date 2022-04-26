@@ -114,7 +114,7 @@ function genCards(pScenModel)
           ]
         )
       ])
-    ),@recur(:"entry in measures")
+    ),@recur(:"entry in measures"), @iif(:"entry.type.id == activeCategory") #stipple makro
   )
 end
 
