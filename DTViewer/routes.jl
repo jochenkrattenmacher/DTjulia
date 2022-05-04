@@ -13,3 +13,7 @@ end
 route("/scenario/:sName") do
   ScenariosController.stipple_view(params(:sName))
 end
+
+route("/monitor/:sName") do
+  ScenariosController.monitor_view(params(:sName))
+end

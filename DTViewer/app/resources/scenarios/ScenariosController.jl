@@ -140,6 +140,29 @@ function scenarioUI(pScenarioName)
   ], @iif(:isready))
 end
 
+function monitorUI(pScenarioName)
+  scenarioModel = model(pScenarioName)
+  println(scenarioModel)
+  page(scenarioModel, class="container", [
+    card(
+      card_section(
+        row([
+          cell(size = 7, [
+              h4(" {{entry.title}} "),
+              p(" {{entry.shortDescription}} ")
+            ]
+          )
+          cell(size = 2, [
+              #checkbox(label = "Select", fieldname = "choices[ {{entry.id}} - 1]")
+              checkbox(label = "ClickMe", fieldname = false)
+            ]
+          )
+        ])
+      ),@recur(:"entry in measures"), @iif(:"entry.type.id == activeCategory") #stipple makro
+    )
+  ], @iif(:isready))
+end
+
 function scenario_view()
   options, maxChoices = parseMeasureJSON(pwd() * "/data/measures.json") # TODO: Path in settigs var
   html(:scenarios, :scenario, measures = options, categories = maxChoices, layout = :app)
@@ -147,6 +170,10 @@ end
 
 function stipple_view(pScenarioName)
   html(scenarioUI(pScenarioName), context = @__MODULE__, layout = :app)
+end
+
+function monitor_view(pScenarioName)
+  html(monitorUI(pScenarioName), context = @__MODULE__, layout = :app)
 end
 
 end # end of module
