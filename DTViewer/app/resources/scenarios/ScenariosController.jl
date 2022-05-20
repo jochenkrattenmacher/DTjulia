@@ -25,7 +25,7 @@ end
 
 @reactive mutable struct Scenario <: ReactiveModel
   choices::R{BitVector} = Bool[]
-  activeCategory::R{Int} = 1
+  activeCategory::R{Int} = 0
   measures::R{Vector{Measure}} = Measure[]
   categories::R{Vector{Category}} = Category[]
 end
@@ -48,8 +48,8 @@ end
 
 function initHandlers(pModel::ReactiveModel)
 
-  on(pModel.isready) do isready # critical handler for linking front end and back end model
-    isready || return
+  on(pModel.isready) do isready # critical handler for linking front end and back end model Kann vielleicht auch weg je nach Stipple version
+    isready || return #on ist handler beobachtet variable und dann tut was
     push!(pModel)
     reloadData!(pModel)
   end
@@ -118,7 +118,7 @@ function genCards(pScenModel)
   )
 end
 
-function reloadData!(pModel)
+function reloadData!(pModel) # nicht mehr notwendig
   dataPath = (pwd() * "/data/measures.json")
   if pModel.isready[] && length(pModel.choices[]) == 0
       println("Reloading data")

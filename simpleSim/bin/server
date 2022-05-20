@@ -1,2 +1,0 @@
-#!/bin/sh
-/Applications/Julia-1.6.app/Contents/Resources/julia/bin/julia --color=yes --depwarn=no --project=@. -q -i -- $(dirname $0)/../bootstrap.jl s "$@"
