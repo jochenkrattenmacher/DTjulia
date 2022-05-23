@@ -30,51 +30,6 @@ end
   categories::R{Vector{Category}} = Category[]
 end
 
-function model(channel)
-  if !haskey(models, channel)
-    models[channel] = init(Scenario, channel = channel) |> initHandlers
-  end
-  return models[channel]
-end
-
-function initModelfromJson(pDataPath::String, pModel::ReactiveModel)
-  measures, categories = parseMeasureJSON(pDataPath)
-  pModel.measures[] = measures
-  pModel.categories[] = categories
-  pModel.choices[] = falses(length(measures))
-
-  return pModel
-end
-
-function initHandlers(pModel::ReactiveModel)
-
-  on(pModel.isready) do isready # critical handler for linking front end and back end model Kann vielleicht auch weg je nach Stipple version
-    isready || return #on ist handler beobachtet variable und dann tut was
-    push!(pModel)
-    reloadData!(pModel)
-  end
-
-  on(pModel.activeCategory) do _
-    @show pModel.activeCategory[]
-  end
-
-  on(pModel.choices) do _
-    catMeasures = filter(x -> x.type.id == pModel.activeCategory[], pModel.measures[])
-    selectCount = 0
-    for entry in catMeasures
-      if pModel.choices[entry.id] == true
-        selectCount += 1
-      end
-    end
-    if pModel.categories[pModel.activeCategory[]].maxChoices <= selectCount
-      pModel.categories[pModel.activeCategory[]].active = false
-    else
-      pModel.categories[pModel.activeCategory[]].active = true
-    end
-  end
-
-  return pModel
-end
 
 function parseMeasureJSON(pPath::String)
   measures = []
@@ -98,6 +53,44 @@ function parseMeasureJSON(pPath::String)
   return measures, categories
 end
 
+function model(channel)
+  if !haskey(models, channel)
+    models[channel] = init(Scenario, channel = channel) |> initHandlers
+  end
+  dataPath = (pwd() * "/data/measures.json")
+  measures, categories = parseMeasureJSON(dataPath)
+  models[channel].measures[] = measures
+  models[channel].categories[] = categories
+  models[channel].choices[] = falses(length(measures))
+  println(models[channel])
+  println(models[channel].categories[])
+  return models[channel]
+end
+
+function initHandlers(pModel::ReactiveModel)
+  on(pModel.activeCategory) do _
+    @show pModel.activeCategory[]
+    @show pModel.categories[]
+  end
+
+  on(pModel.choices) do _
+    catMeasures = filter(x -> x.type.id == pModel.activeCategory[], pModel.measures[])
+    selectCount = 0
+    for entry in catMeasures
+      if pModel.choices[entry.id] == true
+        selectCount += 1
+      end
+    end
+    if pModel.categories[pModel.activeCategory[]].maxChoices <= selectCount
+      pModel.categories[pModel.activeCategory[]].active = false
+    else
+      pModel.categories[pModel.activeCategory[]].active = true
+    end
+  end
+
+  return pModel
+end
+
 function genCards(pScenModel)
  # cards = map(filter(x -> x.type.id == pScenModel.activeCategory[], pScenModel.measures[])) do entry
   card(
@@ -118,16 +111,6 @@ function genCards(pScenModel)
   )
 end
 
-function reloadData!(pModel) # nicht mehr notwendig
-  dataPath = (pwd() * "/data/measures.json")
-  if pModel.isready[] && length(pModel.choices[]) == 0
-      println("Reloading data")
-      pModel = initModelfromJson(dataPath, pModel)
-  else
-    println("Not Reloading data")
-  end
-end
-
 function scenarioUI(pScenarioName)
   scenarioModel = model(pScenarioName)
   println(scenarioModel)
@@ -143,23 +126,9 @@ end
 function monitorUI(pScenarioName)
   scenarioModel = model(pScenarioName)
   println(scenarioModel)
+  cards = genCards(scenarioModel)
   page(scenarioModel, class="container", [
-    card(
-      card_section(
-        row([
-          cell(size = 7, [
-              h4(" {{entry.title}} "),
-              p(" {{entry.shortDescription}} ")
-            ]
-          )
-          cell(size = 2, [
-              #checkbox(label = "Select", fieldname = "choices[ {{entry.id}} - 1]")
-              checkbox(label = "ClickMe", fieldname = false)
-            ]
-          )
-        ])
-      ),@recur(:"entry in measures"), @iif(:"entry.type.id == activeCategory") #stipple makro
-    )
+    cards
   ], @iif(:isready))
 end
 
@@ -174,6 +143,13 @@ end
 
 function monitor_view(pScenarioName)
   html(monitorUI(pScenarioName), context = @__MODULE__, layout = :app)
+end
+
+function reveal_view()
+  options, maxChoices = parseMeasureJSON(pwd() * "/data/measures.json") 
+  println(options)
+  println(maxChoices)
+  html(:scenarios, :reveal, measures = options, categories = maxChoices, layout = :reveal)
 end
 
 end # end of module

@@ -1,0 +1,26 @@
+<div class="reveal">
+    <div class="slides">
+      <section>
+        <aside class="notes">
+            Shhh, these are your private notes 📝
+          </aside>
+        <div>
+            <% for_each(categories) do category %>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <h2>$(category.name)</h2>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-secondary active">
+                                <input type="checkbox" autocomplete="off">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+            <% end %> 
+        </div> 
+      </section>
+      <section>Slide 2</section>
+    </div>
+</div>

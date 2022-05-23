@@ -21,15 +21,11 @@
     <link rel="stylesheet" href="css/white.css">
   </head>
   <body>
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-8">
         <%
           @yield
         %>
-      </div>
-      <div class="col-sm-2"></div>
 
+      
     <footer class="bg-light py-5">
       <div class="container px-4 px-lg-5"><div class="small text-center text-muted">Copyright &copy; 2022 - GCF</div></div>
   </footer>
@@ -44,5 +40,12 @@
   <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
   <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
   <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+  <script src="js/reveal.js"></script>
+  <script src="js/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      plugins: [ RevealNotes ]
+    });
+  </script>
   </body>
 </html>
